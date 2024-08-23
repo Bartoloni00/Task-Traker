@@ -1,0 +1,20 @@
+{
+  "name": "task-traker",
+  "version": "1.0.0",
+  "description": "Backend Roadmap.sh exercise Task traker",
+  "type": "module",
+  "main": "bin/index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "backend",
+    "cli",
+    "roadmap",
+    "node.js"
+  ],
+  "author": "Abraham Bartoloni",
+  "license": "MIT",
+  "bin": {
+    "task-cli": "./bin/index.js"
+  }
+}
