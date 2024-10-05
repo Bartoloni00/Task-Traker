@@ -1,20 +1,26 @@
 {
   "name": "task-traker",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Backend Roadmap.sh exercise Task traker",
   "type": "module",
-  "main": "bin/index.js",
+  "main": "build/bin/index.js",
   "scripts": {
+    "build": "tsc"
   },
   "keywords": [
     "backend",
     "cli",
     "roadmap",
-    "node.js"
+    "node.js",
+    "typescript"
   ],
   "author": "Abraham Bartoloni",
   "license": "MIT",
   "bin": {
-    "task-cli": "./bin/index.js"
+    "task-cli": "./build/bin/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "typescript": "5.6.2"
   }
 }

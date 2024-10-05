@@ -1,13 +1,14 @@
 import JSONFileFormater from '../services/JSONFileFormater.js';
-import path from 'path';
+import { addResult, Task } from '../interfaces/interfaces.js';
+import * as path from 'path';
 import { fileURLToPath } from 'url';
 
 // Convertir la URL del archivo actual a un directorio y filename
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename: string = fileURLToPath(import.meta.url);
+const __dirname: string = path.dirname(__filename);
 
 // Usar __dirname para construir la ruta al archivo JSON
-const JSONFile = new JSONFileFormater(path.join(__dirname, '../tasks.json'));
+const JSONFile: JSONFileFormater = new JSONFileFormater(path.join(__dirname, '../tasks.json'));
 
 
 export default class TaskModel
@@ -17,10 +18,10 @@ export default class TaskModel
      * @param {String} description 
      * @returns {Number} id
      */
-    static async add(description)
+    static async add(description: string): Promise<addResult>
     {
         const newData = await this.#dataFormater({
-            description: description
+            description
         })
 
         return JSONFile.read()
@@ -31,7 +32,7 @@ export default class TaskModel
                     task: {...newData}
                 }
             })
-            .catch(async err => {
+            .catch(async _err => {
                 await JSONFile.write([{...newData}])
                 return {
                     message: `Task added successfully (ID: ${newData.id})`,
@@ -45,7 +46,7 @@ export default class TaskModel
      * @param {Number} id 
      * @param {String} newDescription 
      */
-    static async update(id, newDescription)
+    static async update(id: number, newDescription: string): Promise<string>
     {
         const data = await JSONFile.read()
 
@@ -66,12 +67,12 @@ export default class TaskModel
      * Eliminar una tarea
      * @param {Number} id 
      */
-    static async delete(id)
+    static async delete(id: number): Promise<string>
     {
-        const data = await JSONFile.read()
+        const data: Task[] = await JSONFile.read()
 
-        let message = 'Task not found'
-        let dataFormated = []
+        let message: string = 'Task not found'
+        let dataFormated: Task[] = []
 
         for (let i = 0; i < data.length; i++) {
             if (data[i].id != id) {
@@ -90,7 +91,7 @@ export default class TaskModel
      * @param {Number} id 
      * @param {String} newStatus 
      */
-    static async changeStatus(id, newStatus)
+    static async changeStatus(id: number, newStatus: string): Promise<string>
     {
         const data = await JSONFile.read()
 
@@ -111,26 +112,27 @@ export default class TaskModel
      * Lista todas las tareas que tenemos registradas
      * @param {string} arg Se puede filtrar por el estado de la tarea: done | todo | in-progress
      */
-    static async list(filter = 'all')
+    static async list(filter: string = 'all'): Promise<string | Task[]>
     {
         const data = await JSONFile.read()
 
         if(filter == 'all' || !filter) return data
 
-        let message = `Tasks with (STATE: ${filter}) NOT FOUND`
-        let dataFiltered = []
+        let message: string = `Tasks with (STATE: ${filter}) NOT FOUND`
+        let dataFiltered: Task[] = []
 
         for (let i = 0; i < data.length; i++) {
             if (data[i].status == filter) {
                 dataFiltered.push(data[i])
-                message = null
+                message = ''
             }
         }
         
         return message ?? dataFiltered
     }
 
-    static async #dataFormater({id, description, status = 'todo'}){
+    static async #dataFormater({id, description, status = 'todo'}: Task): Promise<Task>
+    {
         if (!id) {
              id = await JSONFile.getLastID()
                 .then(lastId => id = lastId + 1)
